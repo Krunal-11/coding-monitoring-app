@@ -20,7 +20,7 @@ def index(request):
             return redirect('index')
         else:
             messages.success(
-                request, "There Was An Error Logging In, Please Try Again...")
+                request, "There Was An Error Logging In, Please Try Again")
             return redirect('index')
     else:
         return render(request, 'index.html')
