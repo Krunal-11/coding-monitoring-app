@@ -58,3 +58,35 @@ def spojrate(spo):
             class_="dl-horizontal profile-info-data profile-info-data-stats"
         )
         print(rank_element)
+
+
+def scrape_interviewbit_ranking(username):
+    url = f"https://www.interviewbit.com/profile/{username}"
+    response = requests.get(url)
+    print(response)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        rank_elements = soup.find_all(class_="txt")
+        if rank_elements:
+            rank = rank_elements[1].get_text().strip()
+            return rank
+        else:
+            return "Ranking not found."
+    else:
+        return "Unable to connect to Interviewbit"
+
+
+def scrape_interviewbit_ranking(username):
+    url = f"https://auth.geeksforgeeks.org/user/{username}"
+    response = requests.get(url)
+    print(response)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        rank_elements = soup.find_all(class_="score_card_value")
+        if rank_elements:
+            rank = rank_elements[1].get_text().strip()
+            return rank
+        else:
+            return "Ranking not found."
+    else:
+        return "Unable to connect to Interviewbit"
