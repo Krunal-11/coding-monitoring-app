@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.db import connection
-from .models import R21
+from .models import R21, UserModel
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 import requests
@@ -9,25 +9,33 @@ from .scrap import forcesrate, coderate, leetrate, spojrate
 # Create your views here.
 
 
-def index(request):
-    if (request.method == 'POST'):
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            messages.success(request, "You Have Been Logged In!")
-            return redirect('index')
-        else:
-            messages.success(
-                request, "There Was An Error Logging In, Please Try Again")
-            return redirect('index')
-    else:
-        return render(request, 'index.html')
+def admin_panel(request):
+    return render(request, 'adminpanel.html')
+
+
+def hod_panel(request):
+    return render(request, 'hod_panel.html')
+
+
+def login(request):
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        try:
+            user = UserModel.objects.get(username=username, password=password)
+            if user.user_type == "admin":
+                return redirect('admin_panel')
+            elif user.user_type == "hod":
+                return redirect('hod_panel')
+        except UserModel.DoesNotExist:
+            pass
+
+    return render(request, 'login.html')
 
 
 def display_students(request, year, br):
-
     if (year == '3rd'):
         if (br != 'all'):
             students = R21.objects.all().order_by('-overall_score').filter(branch=br)

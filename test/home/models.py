@@ -65,3 +65,9 @@ class R21(models.Model):
     class Meta:
         managed = True
         db_table = 'r21'
+
+
+class UserModel(models.Model):
+    username = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
+    user_type = models.CharField(max_length=20)
