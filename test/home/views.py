@@ -10,7 +10,7 @@ from .scrap import forcesrate, coderate, leetrate, spojrate
 
 
 def admin_panel(request):
-    return render(request, 'adminpanel.html')
+    return render(request, 'admin_panel.html')
 
 
 def hod_panel(request):
@@ -111,3 +111,22 @@ def update(request):
         'updated': 'updated'
     }
     return render(request, 'updating.html', context)
+
+
+def custom_login(request):
+    if request.method == 'POST':
+
+        username = request.POST.get['username']
+        password = request.POST.get['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            # Redirect to the appropriate page based on user type
+            if user.user_type == 'admin':
+                return redirect('admin_panel')
+            elif user.user_type == 'hod':
+                return redirect('hod_panel')
+            else:
+                return redirect('student_panel')
+
+    return render(request, 'login.html', {'form': form})
